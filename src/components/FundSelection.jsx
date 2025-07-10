@@ -1,11 +1,31 @@
 import React, { useState, useEffect } from 'react';
 
+// Helper: Extract payout option from scheme name
+function getPayoutOption(schemeName) {
+  const name = schemeName.toLowerCase();
+  if (name.includes('growth')) return 'growth';
+  if (name.includes('dividend reinvestment')) return 'dividend reinvestment';
+  if (name.includes('dividend payout')) return 'dividend payout';
+  if (name.includes('idcw')) return 'idcw';
+  return 'other';
+}
+
+// Helper: Extract plan type from scheme name
+function getPlanType(schemeName) {
+  const name = schemeName.toLowerCase();
+  if (name.includes('direct')) return 'direct';
+  if (name.includes('regular')) return 'regular';
+  return 'other';
+}
+
 function FundSelection() {
   const [funds, setFunds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFunds, setSelectedFunds] = useState([]); // <-- Selected schemeCodes
+  const [selectedFunds, setSelectedFunds] = useState([]);
+  const [payoutOption, setPayoutOption] = useState('all');
+  const [planType, setPlanType] = useState('all');
 
   useEffect(() => {
     async function fetchFunds() {
@@ -34,17 +54,28 @@ function FundSelection() {
 
   if (error) return <div>Error: {error}</div>;
 
-  // Filter funds based on search term (case insensitive)
-  const filteredFunds = funds.filter((fund) =>
-    fund.schemeName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filter funds based on search term and parsed payout/plan types
+  const filteredFunds = funds
+    .filter((fund) =>
+      fund.schemeName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((fund) => {
+      if (payoutOption === 'all') return true;
+      const payout = getPayoutOption(fund.schemeName);
+      return payout === payoutOption;
+    })
+    .filter((fund) => {
+      if (planType === 'all') return true;
+      const plan = getPlanType(fund.schemeName);
+      return plan === planType;
+    });
 
   // Toggle selection of a fund by schemeCode
   const toggleSelect = (schemeCode) => {
     setSelectedFunds((prevSelected) =>
       prevSelected.includes(schemeCode)
-        ? prevSelected.filter((code) => code !== schemeCode) // remove if already selected
-        : [...prevSelected, schemeCode] // add if not selected
+        ? prevSelected.filter((code) => code !== schemeCode)
+        : [...prevSelected, schemeCode]
     );
   };
 
@@ -67,17 +98,14 @@ function FundSelection() {
 
   const enableShowComparison = () => {
     return selectedFunds.length >= 2 && selectedFunds.length <= 4;
-  }
+  };
 
   const clearSelection = () => {
     setSelectedFunds([]);
   };
 
-
-
-
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center py-8">
       <h2 className="text-2xl font-bold mb-4">Fund List</h2>
       <input
         type="text"
@@ -86,63 +114,108 @@ function FundSelection() {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-6 px-4 py-2 border border-gray-300 rounded-md w-80 focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
-      <div className='flex justify-center items-center'>
-      <div className="max-w-2/3 flex flex-wrap gap-4 max-h-[550px] overflow-y-scroll">
-        {filteredFunds.slice(0, 20).map((fund) => {
-          const isSelected = selectedFunds.includes(fund.schemeCode);
-          return (
-            <div
-              key={fund.schemeCode}
-              onClick={() => toggleSelect(fund.schemeCode)}
-              className={`border rounded-lg p-4 shadow-md w-77 flex flex-col justify-between h-50 cursor-pointer relative ${isSelected ? 'bg-blue-100' : ''
-                }`}
-              title={isSelected ? 'Click to deselect' : 'Click to select'}
-            >
-              {isSelected && (
-                <div className="absolute top-2 right-2 text-blue-600 text-xl font-bold select-none">
-                  ✓
-                </div>
-              )}
-
-              <div className="text-sm font-semibold text-gray-700">{fund.schemeCode}</div>
-
-              <div className="mt-4 text-left text-lg font-medium text-gray-900 flex-grow">
-                {highlightMatch(fund.schemeName, searchTerm)}
-              </div>
-
-              <div className="mt-4 flex justify-start gap-6 text-sm text-gray-600">
-                <div>
-                  <span className="font-semibold">ISIN Growth:</span>{' '}
-                  <span>{fund.isinGrowth || 'N/A'}</span>
-                </div>
-                <div>
-                  <span className="font-semibold">ISIN Div Reinvestment:</span>{' '}
-                  <span>{fund.isinDivReinvestment || 'N/A'}</span>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-
-        {filteredFunds.length === 0 && (
-          <div className="text-gray-500 text-lg mt-4">No funds found.</div>
-        )}
-      </div>
-      <div className='m-4 flex justify-center items-center gap-3'>
-          <button
-            className={`bg-blue-500 text-white p-2 rounded ${enableShowComparison() ? '' : 'opacity-50 cursor-not-allowed'
-              }`}
-            disabled={!enableShowComparison()}
-            onClick={() => {
-              // Your comparison logic here
-              alert(`Comparing funds: ${selectedFunds.join(', ')}`);
-            }}
+      <div className="flex gap-4 mb-4">
+        <div>
+          <label className="mr-2 font-semibold">Payout Option:</label>
+          <select
+            value={payoutOption}
+            onChange={e => setPayoutOption(e.target.value)}
+            className="border rounded px-2 py-1"
           >
-            Show Comparison
-            </button>
-        <button className='bg-gray-300 p-2' onClick={clearSelection}>
-          Clear Selection
+            <option value="all">All</option>
+            <option value="growth">Growth</option>
+            <option value="idcw">IDCW</option>
+            <option value="dividend payout">Dividend Payout</option>
+            <option value="dividend reinvestment">Dividend Reinvestment</option>
+          </select>
+        </div>
+        <div>
+          <label className="mr-2 font-semibold">Plan Type:</label>
+          <select
+            value={planType}
+            onChange={e => setPlanType(e.target.value)}
+            className="border rounded px-2 py-1"
+          >
+            <option value="all">All</option>
+            <option value="direct">Direct</option>
+            <option value="regular">Regular</option>
+          </select>
+        </div>
+        <button
+          className="ml-2 text-blue-600 underline"
+          onClick={() => {
+            setPayoutOption('all');
+            setPlanType('all');
+          }}
+        >
+          Clear Selected
         </button>
+      </div>
+
+      <div className='flex justify-center items-center'>
+        <div className="max-w-2/3 flex flex-wrap gap-4 max-h-[550px] overflow-y-scroll">
+          {filteredFunds.slice(0, 5000).map((fund) => {
+            const isSelected = selectedFunds.includes(fund.schemeCode);
+            return (
+              <div
+                key={fund.schemeCode}
+                onClick={() => toggleSelect(fund.schemeCode)}
+                className={`border rounded-lg p-4 shadow-md w-77 h-auto flex flex-col justify-between  cursor-pointer relative ${isSelected ? 'bg-blue-100' : ''
+                  }`}
+                title={isSelected ? 'Click to deselect' : 'Click to select'}
+              >
+                {isSelected && (
+                  <div className="absolute top-2 right-2 text-blue-600 text-xl font-bold select-none">
+                    ✓
+                  </div>
+                )}
+
+                <div className="text-sm font-semibold text-gray-700">{fund.schemeCode}</div>
+
+                <div className="mt-4 text-left text-lg font-medium text-gray-900 flex-grow">
+                  {highlightMatch(fund.schemeName, searchTerm)}
+                </div>
+
+                <div className="mt-4 flex flex-col gap-1 text-sm text-gray-600">
+                  <div>
+                    <span className="font-semibold">ISIN:</span>{' '}
+                    <span>{fund.isin || 'N/A'}</span>
+                  </div>
+                  {/* Optionally, show parsed payout/plan */}
+                  <div>
+                    <span className="font-semibold">Payout Option:</span>{' '}
+                    <span>{getPayoutOption(fund.schemeName)}</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold">Plan Type:</span>{' '}
+                    <span>{getPlanType(fund.schemeName)}</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {filteredFunds.length === 0 && (
+            <div className="text-gray-500 text-lg mt-4">No funds found.</div>
+          )}
+        </div>
+        <div>
+          <div className='m-4 flex justify-center items-center gap-3'>
+            <button
+              className={`bg-blue-500 text-white p-2 rounded ${enableShowComparison() ? '' : 'opacity-50 cursor-not-allowed'
+                }`}
+              disabled={!enableShowComparison()}
+              onClick={() => {
+                // Your comparison logic here
+                alert(`Comparing funds: ${selectedFunds.join(', ')}`);
+              }}
+            >
+              Show Comparison
+            </button>
+            <button className='bg-gray-300 p-2' onClick={clearSelection}>
+              Clear Selection
+            </button>
+          </div>
         </div>
       </div>
     </div>
