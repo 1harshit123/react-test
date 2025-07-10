@@ -20,7 +20,7 @@ export default function Navbar() {
                     {/* Left: Logo */}
                     <div className="flex-shrink-0">
                         <a href="/" className="font-bold text-xl text-[#1AA39A]">
-                            Mutual Fund
+                            Mutual Funds Test App
                         </a>
                     </div>
                     <div>

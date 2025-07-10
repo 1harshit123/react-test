@@ -155,7 +155,7 @@ function FundSelection() {
 
       <div className='flex justify-center items-center'>
         <div className="max-w-2/3 flex flex-wrap gap-4 max-h-[550px] overflow-y-scroll">
-          {filteredFunds.slice(0, 5000).map((fund) => {
+          {filteredFunds.map((fund) => {
             const isSelected = selectedFunds.includes(fund.schemeCode);
             return (
               <div
