@@ -106,7 +106,7 @@ function FundSelection() {
 
   return (
     <div className="flex flex-col justify-center items-center py-8">
-      <h2 className="text-2xl font-bold mb-4">Fund List</h2>
+      <h2 className="text-3xl font-bold mb-7 text-[#1AA39A] ">Fund List</h2>
       <input
         type="text"
         placeholder="Search by scheme name..."
@@ -116,7 +116,7 @@ function FundSelection() {
       />
       <div className="flex gap-4 mb-4">
         <div>
-          <label className="mr-2 font-semibold">Payout Option:</label>
+          <label className="mr-2 font-semibold text-blue-400">Payout Option:</label>
           <select
             value={payoutOption}
             onChange={e => setPayoutOption(e.target.value)}
@@ -130,7 +130,7 @@ function FundSelection() {
           </select>
         </div>
         <div>
-          <label className="mr-2 font-semibold">Plan Type:</label>
+          <label className="mr-2 font-semibold text-blue-400">Plan Type:</label>
           <select
             value={planType}
             onChange={e => setPlanType(e.target.value)}
@@ -142,15 +142,16 @@ function FundSelection() {
           </select>
         </div>
         <button
-          className="ml-2 text-blue-600 underline"
+          className="ml-2 bg-gray-200 p-2 rounded-full text-sm cursor-pointer transition-opacity duration-200 hover:opacity-80 active:opacity-60"
           onClick={() => {
             setPayoutOption('all');
             setPlanType('all');
           }}
         >
-          Clear Selected
+          Clear Filter
         </button>
       </div>
+      <div className="w-2/3 h-0.5 bg-gray-300 flex justify-center items-center mb-5"></div>
 
       <div className='flex justify-center items-center'>
         <div className="max-w-2/3 flex flex-wrap gap-4 max-h-[550px] overflow-y-scroll">

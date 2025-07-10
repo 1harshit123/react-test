@@ -20,32 +20,9 @@ export default function Navbar() {
                     {/* Left: Logo */}
                     <div className="flex-shrink-0">
                         <a href="/" className="font-bold text-xl text-[#1AA39A]">
-                            MyApp
+                            Mutual Fund
                         </a>
                     </div>
-
-                    {/* Center: Navigation Menu */}
-                    <NavigationMenu>
-                        <NavigationMenuList className="flex space-x-6">
-                            <NavigationMenuItem>
-                                <NavigationMenuLink href="/about" className="text-gray-700 hover:text-[#1AA39A]">
-                                    About
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
-                            <NavigationMenuItem>
-                                <NavigationMenuLink href="/funds" className="text-gray-700 hover:text-[#1AA39A]">
-                                    Funds
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
-                            <NavigationMenuItem>
-                                <NavigationMenuLink href="/contact" className="text-gray-700 hover:text-[#1AA39A]">
-                                    Contact
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
-                        </NavigationMenuList>
-                    </NavigationMenu>
-
-                    {/* Right: Logout Button */}
                     <div>
                         <button
                             onClick={logoutPage}

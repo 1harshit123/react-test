@@ -3,6 +3,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import LoginPage from '@/components/LoginPage';
 import FundSelection from '@/components/FundSelection';
+import { useEffect } from 'react';
+
+
 
 function App() {
   const router = createBrowserRouter([
