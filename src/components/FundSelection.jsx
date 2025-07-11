@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../App.css';
 import { useNavigate } from 'react-router-dom';
 
 // Helper: Extract payout option from scheme name
@@ -50,12 +51,18 @@ function FundSelection() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center font-semibold text-3xl text-blue-300">
-        Loading funds...
+      <div className="flex justify-center items-center h-[100vh]">
+        <div className="loader text-blue-500 mx-auto my-auto">Loading ...</div>
       </div>
     );
 
-  if (error) return <div>Error: {error}</div>;
+  if (error)
+    return (
+      <div className="flex justify-center items-center min-h-screen text-red-500 text-xl font-semibold">
+        Error: {error}
+      </div>
+    );
+  
 
   // Filter funds based on search term and parsed payout/plan types
   const filteredFunds = funds
