@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Helper: Extract payout option from scheme name
 function getPayoutOption(schemeName) {
@@ -26,6 +27,8 @@ function FundSelection() {
   const [selectedFunds, setSelectedFunds] = useState([]);
   const [payoutOption, setPayoutOption] = useState('all');
   const [planType, setPlanType] = useState('all');
+  // for navigation button
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchFunds() {
@@ -104,6 +107,7 @@ function FundSelection() {
     setSelectedFunds([]);
   };
 
+  
   return (
     <div className="flex flex-col justify-center items-center py-8">
       <h2 className="text-3xl font-bold mb-7 text-[#1AA39A] ">Fund List</h2>
@@ -155,7 +159,7 @@ function FundSelection() {
 
       <div className='flex justify-center items-center'>
         <div className="max-w-2/3 flex flex-wrap gap-4 max-h-[550px] overflow-y-scroll">
-          {filteredFunds.map((fund) => {
+          {filteredFunds.slice(0,500).map((fund) => {
             const isSelected = selectedFunds.includes(fund.schemeCode);
             return (
               <div
@@ -207,8 +211,11 @@ function FundSelection() {
                 }`}
               disabled={!enableShowComparison()}
               onClick={() => {
-                // Your comparison logic here
+                navigate('/comparison', {
+                  state: { selectedFunds } 
+                });
                 alert(`Comparing funds: ${selectedFunds.join(', ')}`);
+
               }}
             >
               Show Comparison

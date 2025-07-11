@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import LoginPage from '@/components/LoginPage';
 import FundSelection from '@/components/FundSelection';
+import Comparison from '@/components/Comparison';
 import { useEffect } from 'react';
 
 
@@ -31,6 +32,16 @@ function App() {
         <>
           <Navbar />
           <FundSelection />
+        </>
+      ),
+    },
+    {
+      path: '/comparison',
+      element: (
+        <>
+          <Navbar />
+          <Comparison/>
+          
         </>
       ),
     },
