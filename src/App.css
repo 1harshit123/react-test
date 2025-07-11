@@ -9,7 +9,7 @@
     width: var(--w);
     overflow: hidden;
     white-space: nowrap;
-    color: #0000;
+    color: #178f8a;
     animation: l17 2s infinite;
 }
 
@@ -20,8 +20,8 @@
 @keyframes l17 {
     0% {
         text-shadow:
-            calc(0*var(--w)) -1.2em #000, calc(-1*var(--w)) -1.2em #000, calc(-2*var(--w)) -1.2em #000, calc(-3*var(--w)) -1.2em #000, calc(-4*var(--w)) -1.2em #000,
-            calc(-5*var(--w)) -1.2em #000, calc(-6*var(--w)) -1.2em #000, calc(-7*var(--w)) -1.2em #000, calc(-8*var(--w)) -1.2em #000, calc(-9*var(--w)) -1.2em #000
+            calc(0*var(--w)) -1.2em #000, calc(-1*var(--w)) -1.2em #000, calc(-2*var(--w)) -1.2em #000, calc(-3*var(--w)) -1.2em #000, calc(-4*var(--w)) -1.2em blue,
+            calc(-5*var(--w)) -1.2em #000, calc(-6*var(--w)) -1.2em #000, calc(-7*var(--w)) -1.2em #000, calc(-8*var(--w)) -1.2em #000, calc(-9*var(--w)) -1.2em blue
     }
 
     4% {
